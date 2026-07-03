@@ -36,6 +36,9 @@ import { DealsPage } from "./pages/deals/DealsPage";
 // Chat Pages
 import { ChatPage } from "./pages/chat/ChatPage";
 
+// Meeting Pages
+import { MeetingsPageWrapper } from "./pages/Meetings/MeetingsPageWrapper";
+
 function App() {
   return (
     <AuthProvider>
@@ -198,6 +201,19 @@ function App() {
           >
             <Route index element={<ChatPage />} />
             <Route path=":userId" element={<ChatPage />} />
+          </Route>
+
+          {/* Meeting Routes */}
+          <Route
+            path="/meetings"
+            element={
+              <ProtectedRoute>
+                {" "}
+                <DashboardLayout />{" "}
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<MeetingsPageWrapper />} />
           </Route>
 
           {/* Redirect root to login */}

@@ -17,6 +17,7 @@ import { useAuth } from "../../context/AuthContext";
 import { CollaborationRequest, Investor } from "../../types";
 import { getRequestsForEntrepreneur } from "../../api/collaborationRequests";
 import { getInvestors } from "../../api/users";
+import { meetingsApi } from "../../api/meetings";
 
 export const EntrepreneurDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -26,14 +27,23 @@ export const EntrepreneurDashboard: React.FC = () => {
   const [recommendedInvestors, setRecommendedInvestors] = useState<Investor[]>(
     [],
   );
+  const [upcomingMeetingsCount, setUpcomingMeetingsCount] = useState(0);
 
   useEffect(() => {
     if (!user) return;
 
-    Promise.all([getRequestsForEntrepreneur(user.id), getInvestors()])
-      .then(([requests, investors]) => {
+    Promise.all([
+      getRequestsForEntrepreneur(user.id),
+      getInvestors(),
+      meetingsApi.list({ status: "accepted" }),
+    ])
+      .then(([requests, investors, acceptedMeetings]) => {
         setCollaborationRequests(requests);
         setRecommendedInvestors(investors.slice(0, 3));
+        const now = new Date();
+        setUpcomingMeetingsCount(
+          acceptedMeetings.filter((m) => new Date(m.startTime) > now).length,
+        );
       })
       .catch(console.error);
   }, [user]);
@@ -121,7 +131,9 @@ export const EntrepreneurDashboard: React.FC = () => {
                 <p className="text-sm font-medium text-accent-700">
                   Upcoming Meetings
                 </p>
-                <h3 className="text-xl font-semibold text-accent-900">0</h3>
+                <h3 className="text-xl font-semibold text-accent-900">
+                  {upcomingMeetingsCount}
+                </h3>
               </div>
             </div>
           </CardBody>

@@ -14,7 +14,18 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}) {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => null);
-    throw new Error(errorData?.message || "API request failed");
+    const error = new Error(
+      errorData?.message || "API request failed",
+    ) as Error & {
+      data?: unknown;
+      status?: number;
+    };
+    // Kept as extra properties so every existing caller that only reads
+    // `.message` keeps working unchanged; new callers (like meetings.ts)
+    // can read `.data` / `.status` when they need more than the message.
+    error.data = errorData;
+    error.status = response.status;
+    throw error;
   }
 
   return response.json();

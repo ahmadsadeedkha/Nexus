@@ -1,97 +1,110 @@
-import React, { useState } from 'react';
-import { Search, Filter, DollarSign, TrendingUp, Users, Calendar } from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../../components/ui/Card';
-import { Input } from '../../components/ui/Input';
-import { Button } from '../../components/ui/Button';
-import { Badge } from '../../components/ui/Badge';
-import { Avatar } from '../../components/ui/Avatar';
+import React, { useState } from "react";
+import {
+  Search,
+  Filter,
+  DollarSign,
+  TrendingUp,
+  Users,
+  Calendar,
+} from "lucide-react";
+import { Card, CardHeader, CardBody } from "../../components/ui/Card";
+import { Input } from "../../components/ui/Input";
+import { Button } from "../../components/ui/Button";
+import { Badge } from "../../components/ui/Badge";
+import { Avatar } from "../../components/ui/Avatar";
 
 const deals = [
   {
     id: 1,
     startup: {
-      name: 'TechWave AI',
-      logo: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg',
-      industry: 'FinTech'
+      name: "TechWave AI",
+      logo: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
+      industry: "FinTech",
     },
-    amount: '$1.5M',
-    equity: '15%',
-    status: 'Due Diligence',
-    stage: 'Series A',
-    lastActivity: '2024-02-15'
+    amount: "$1.5M",
+    equity: "15%",
+    status: "Due Diligence",
+    stage: "Series A",
+    lastActivity: "2024-02-15",
   },
   {
     id: 2,
     startup: {
-      name: 'GreenLife Solutions',
-      logo: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg',
-      industry: 'CleanTech'
+      name: "GreenLife Solutions",
+      logo: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg",
+      industry: "CleanTech",
     },
-    amount: '$2M',
-    equity: '20%',
-    status: 'Term Sheet',
-    stage: 'Seed',
-    lastActivity: '2024-02-10'
+    amount: "$2M",
+    equity: "20%",
+    status: "Term Sheet",
+    stage: "Seed",
+    lastActivity: "2024-02-10",
   },
   {
     id: 3,
     startup: {
-      name: 'HealthPulse',
-      logo: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg',
-      industry: 'HealthTech'
+      name: "HealthPulse",
+      logo: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
+      industry: "HealthTech",
     },
-    amount: '$800K',
-    equity: '12%',
-    status: 'Negotiation',
-    stage: 'Pre-seed',
-    lastActivity: '2024-02-05'
-  }
+    amount: "$800K",
+    equity: "12%",
+    status: "Negotiation",
+    stage: "Pre-seed",
+    lastActivity: "2024-02-05",
+  },
 ];
 
 export const DealsPage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
-  
-  const statuses = ['Due Diligence', 'Term Sheet', 'Negotiation', 'Closed', 'Passed'];
-  
+
+  const statuses = [
+    "Due Diligence",
+    "Term Sheet",
+    "Negotiation",
+    "Closed",
+    "Passed",
+  ];
+
   const toggleStatus = (status: string) => {
-    setSelectedStatus(prev => 
+    setSelectedStatus((prev) =>
       prev.includes(status)
-        ? prev.filter(s => s !== status)
-        : [...prev, status]
+        ? prev.filter((s) => s !== status)
+        : [...prev, status],
     );
   };
-  
+
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Due Diligence':
-        return 'primary';
-      case 'Term Sheet':
-        return 'secondary';
-      case 'Negotiation':
-        return 'accent';
-      case 'Closed':
-        return 'success';
-      case 'Passed':
-        return 'error';
+      case "Due Diligence":
+        return "primary";
+      case "Term Sheet":
+        return "secondary";
+      case "Negotiation":
+        return "accent";
+      case "Closed":
+        return "success";
+      case "Passed":
+        return "error";
       default:
-        return 'gray';
+        return "gray";
     }
   };
-  
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Investment Deals</h1>
-          <p className="text-gray-600">Track and manage your investment pipeline</p>
+          <p className="text-gray-600">
+            Track and manage your investment pipeline
+          </p>
         </div>
-        
-        <Button>
-          Add Deal
-        </Button>
+
+        <Button>Add Deal</Button>
       </div>
-      
+
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
@@ -107,7 +120,7 @@ export const DealsPage: React.FC = () => {
             </div>
           </CardBody>
         </Card>
-        
+
         <Card>
           <CardBody>
             <div className="flex items-center">
@@ -121,7 +134,7 @@ export const DealsPage: React.FC = () => {
             </div>
           </CardBody>
         </Card>
-        
+
         <Card>
           <CardBody>
             <div className="flex items-center">
@@ -135,7 +148,7 @@ export const DealsPage: React.FC = () => {
             </div>
           </CardBody>
         </Card>
-        
+
         <Card>
           <CardBody>
             <div className="flex items-center">
@@ -150,7 +163,7 @@ export const DealsPage: React.FC = () => {
           </CardBody>
         </Card>
       </div>
-      
+
       {/* Filters */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="w-full md:w-2/3">
@@ -162,15 +175,19 @@ export const DealsPage: React.FC = () => {
             fullWidth
           />
         </div>
-        
+
         <div className="w-full md:w-1/3">
           <div className="flex items-center gap-2">
             <Filter size={18} className="text-gray-500" />
             <div className="flex flex-wrap gap-2">
-              {statuses.map(status => (
+              {statuses.map((status) => (
                 <Badge
                   key={status}
-                  variant={selectedStatus.includes(status) ? getStatusColor(status) : 'gray'}
+                  variant={
+                    selectedStatus.includes(status)
+                      ? getStatusColor(status)
+                      : "gray"
+                  }
                   className="cursor-pointer"
                   onClick={() => toggleStatus(status)}
                 >
@@ -181,7 +198,7 @@ export const DealsPage: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Deals table */}
       <Card>
         <CardHeader>
@@ -216,7 +233,7 @@ export const DealsPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {deals.map(deal => (
+                {deals.map((deal) => (
                   <tr key={deal.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
