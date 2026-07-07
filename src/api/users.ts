@@ -1,6 +1,10 @@
 import { apiFetch } from "./client";
 import { User, Entrepreneur, Investor } from "../types";
 
+export async function getAllUsers(): Promise<User[]> {
+  return apiFetch("/users");
+}
+
 export async function getEntrepreneurs(): Promise<Entrepreneur[]> {
   return apiFetch("/users?role=entrepreneur");
 }

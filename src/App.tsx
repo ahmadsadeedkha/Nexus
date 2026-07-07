@@ -6,6 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { CallProvider } from "./context/callContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 // Layouts
@@ -39,190 +40,218 @@ import { ChatPage } from "./pages/chat/ChatPage";
 // Meeting Pages
 import { MeetingsPageWrapper } from "./pages/Meetings/MeetingsPageWrapper";
 
+// Video Call
+import { VideoCallPage } from "./pages/call/VideoCallPage";
+import { IncomingCallModal } from "./components/call/IncomingCallModal";
+import { ActiveCallScreen } from "./components/call/ActiveCallScreen";
+
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Authentication Routes */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+      <CallProvider>
+        <Router>
+          {/* Mounted globally so a call can ring in / stay active no matter
+              which page the user is on. */}
+          <IncomingCallModal />
+          <ActiveCallScreen />
 
-          {/* Dashboard Routes */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                {" "}
-                <DashboardLayout />{" "}
-              </ProtectedRoute>
-            }
-          >
+          <Routes>
+            {/* Authentication Routes */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+
+            {/* Dashboard Routes */}
             <Route
-              path="entrepreneur"
+              path="/dashboard"
               element={
-                <ProtectedRoute allowedRoles={["entrepreneur"]}>
+                <ProtectedRoute>
                   {" "}
-                  <EntrepreneurDashboard />{" "}
+                  <DashboardLayout />{" "}
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route
+                path="entrepreneur"
+                element={
+                  <ProtectedRoute allowedRoles={["entrepreneur"]}>
+                    {" "}
+                    <EntrepreneurDashboard />{" "}
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="investor"
+                element={
+                  <ProtectedRoute allowedRoles={["investor"]}>
+                    {" "}
+                    <InvestorDashboard />{" "}
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+
+            {/* Profile Routes */}
             <Route
-              path="investor"
+              path="/profile"
               element={
-                <ProtectedRoute allowedRoles={["investor"]}>
+                <ProtectedRoute>
                   {" "}
-                  <InvestorDashboard />{" "}
+                  <DashboardLayout />{" "}
                 </ProtectedRoute>
               }
-            />
-          </Route>
+            >
+              <Route
+                path="entrepreneur/:id"
+                element={<EntrepreneurProfile />}
+              />
+              <Route path="investor/:id" element={<InvestorProfile />} />
+            </Route>
 
-          {/* Profile Routes */}
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                {" "}
-                <DashboardLayout />{" "}
-              </ProtectedRoute>
-            }
-          >
-            <Route path="entrepreneur/:id" element={<EntrepreneurProfile />} />
-            <Route path="investor/:id" element={<InvestorProfile />} />
-          </Route>
+            {/* Feature Routes */}
+            <Route
+              path="/investors"
+              element={
+                <ProtectedRoute>
+                  {" "}
+                  <DashboardLayout />{" "}
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<InvestorsPage />} />
+            </Route>
 
-          {/* Feature Routes */}
-          <Route
-            path="/investors"
-            element={
-              <ProtectedRoute>
-                {" "}
-                <DashboardLayout />{" "}
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<InvestorsPage />} />
-          </Route>
+            <Route
+              path="/entrepreneurs"
+              element={
+                <ProtectedRoute>
+                  {" "}
+                  <DashboardLayout />{" "}
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<EntrepreneursPage />} />
+            </Route>
 
-          <Route
-            path="/entrepreneurs"
-            element={
-              <ProtectedRoute>
-                {" "}
-                <DashboardLayout />{" "}
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<EntrepreneursPage />} />
-          </Route>
+            <Route
+              path="/messages"
+              element={
+                <ProtectedRoute>
+                  {" "}
+                  <DashboardLayout />{" "}
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<MessagesPage />} />
+            </Route>
 
-          <Route
-            path="/messages"
-            element={
-              <ProtectedRoute>
-                {" "}
-                <DashboardLayout />{" "}
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<MessagesPage />} />
-          </Route>
+            <Route
+              path="/notifications"
+              element={
+                <ProtectedRoute>
+                  {" "}
+                  <DashboardLayout />{" "}
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<NotificationsPage />} />
+            </Route>
 
-          <Route
-            path="/notifications"
-            element={
-              <ProtectedRoute>
-                {" "}
-                <DashboardLayout />{" "}
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<NotificationsPage />} />
-          </Route>
+            <Route
+              path="/documents"
+              element={
+                <ProtectedRoute>
+                  {" "}
+                  <DashboardLayout />{" "}
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<DocumentsPage />} />
+            </Route>
 
-          <Route
-            path="/documents"
-            element={
-              <ProtectedRoute>
-                {" "}
-                <DashboardLayout />{" "}
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<DocumentsPage />} />
-          </Route>
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  {" "}
+                  <DashboardLayout />{" "}
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<SettingsPage />} />
+            </Route>
 
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                {" "}
-                <DashboardLayout />{" "}
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<SettingsPage />} />
-          </Route>
+            <Route
+              path="/help"
+              element={
+                <ProtectedRoute>
+                  {" "}
+                  <DashboardLayout />{" "}
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<HelpPage />} />
+            </Route>
 
-          <Route
-            path="/help"
-            element={
-              <ProtectedRoute>
-                {" "}
-                <DashboardLayout />{" "}
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<HelpPage />} />
-          </Route>
+            <Route
+              path="/deals"
+              element={
+                <ProtectedRoute>
+                  {" "}
+                  <DashboardLayout />{" "}
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<DealsPage />} />
+            </Route>
 
-          <Route
-            path="/deals"
-            element={
-              <ProtectedRoute>
-                {" "}
-                <DashboardLayout />{" "}
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<DealsPage />} />
-          </Route>
+            {/* Chat Routes */}
+            <Route
+              path="/chat"
+              element={
+                <ProtectedRoute>
+                  {" "}
+                  <DashboardLayout />{" "}
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<ChatPage />} />
+              <Route path=":userId" element={<ChatPage />} />
+            </Route>
 
-          {/* Chat Routes */}
-          <Route
-            path="/chat"
-            element={
-              <ProtectedRoute>
-                {" "}
-                <DashboardLayout />{" "}
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<ChatPage />} />
-            <Route path=":userId" element={<ChatPage />} />
-          </Route>
+            {/* Meeting Routes */}
+            <Route
+              path="/meetings"
+              element={
+                <ProtectedRoute>
+                  {" "}
+                  <DashboardLayout />{" "}
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<MeetingsPageWrapper />} />
+            </Route>
 
-          {/* Meeting Routes */}
-          <Route
-            path="/meetings"
-            element={
-              <ProtectedRoute>
-                {" "}
-                <DashboardLayout />{" "}
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<MeetingsPageWrapper />} />
-          </Route>
+            {/* Video Call Routes */}
+            <Route
+              path="/call"
+              element={
+                <ProtectedRoute>
+                  {" "}
+                  <DashboardLayout />{" "}
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<VideoCallPage />} />
+            </Route>
 
-          {/* Redirect root to login */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
+            {/* Redirect root to login */}
+            <Route path="/" element={<Navigate to="/login" replace />} />
 
-          {/* Catch all other routes and redirect to login */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </Router>
+            {/* Catch all other routes and redirect to login */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </Router>
+      </CallProvider>
     </AuthProvider>
   );
 }
